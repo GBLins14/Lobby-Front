@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 7%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 7%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 270 91% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 10% 12%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 10% 15%;
+    --muted-foreground: 0 0% 64%;
+
+    --accent: 270 91% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 10% 18%;
+    --input: 240 10% 12%;
+    --ring: 270 91% 65%;
+
+    --radius: 0.75rem;
+
+    /* Custom colors */
+    --lobby-cyan: 187 94% 43%;
+    --lobby-teal: 160 84% 39%;
+    --lobby-purple: 270 91% 65%;
+    --lobby-orange: 25 95% 53%;
+    --lobby-yellow: 45 93% 58%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(270 91% 65%) 0%, hsl(290 91% 55%) 100%);
+    --gradient-cyan: linear-gradient(135deg, hsl(187 94% 43%) 0%, hsl(200 94% 50%) 100%);
+    --gradient-teal: linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(170 84% 45%) 100%);
+    
+    /* Glow effects */
+    --glow-primary: 0 0 120px hsl(270 91% 65% / 0.4);
+    --glow-cyan: 0 0 80px hsl(187 94% 43% / 0.3);
+    --glow-teal: 0 0 80px hsl(160 84% 39% / 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl shadow-xl;
+  }
+
+  .input-dark {
+    @apply bg-input border-0 text-foreground placeholder:text-muted-foreground rounded-xl h-10 md:h-12 px-4 text-sm md:text-base;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary to-[hsl(290,91%,55%)] text-primary-foreground font-medium rounded-xl h-11 sm:h-12 px-5 sm:px-6 transition-all duration-300 hover:opacity-90 hover:shadow-lg hover:shadow-primary/30 text-sm sm:text-base;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground font-medium rounded-xl h-11 sm:h-12 px-5 sm:px-6 border border-border transition-all duration-300 hover:bg-secondary/80 text-sm sm:text-base;
+  }
+
+  .role-card {
+    @apply glass-card p-4 flex items-center gap-4 cursor-pointer transition-all duration-300 hover:border-primary/50 hover:bg-card/70;
+  }
+
+  .feature-card {
+    @apply glass-card p-6 transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10;
+  }
+
+  .testimonial-card {
+    @apply glass-card p-6 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10;
+  }
+
+  .stat-card {
+    @apply glass-card px-6 py-4 text-center;
+  }
+
+  .step-card {
+    @apply glass-card p-6 relative overflow-hidden;
+  }
+
+  .badge-primary {
+    @apply inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-2 rounded-full text-sm font-medium;
+  }
+
+  .badge-cyan {
+    @apply inline-flex items-center gap-2 bg-[hsl(var(--lobby-cyan))]/20 text-[hsl(var(--lobby-cyan))] w-full justify-center py-3 rounded-xl font-medium;
+  }
+
+  .badge-teal {
+    @apply inline-flex items-center gap-2 bg-[hsl(var(--lobby-teal))]/20 text-[hsl(var(--lobby-teal))] w-full justify-center py-3 rounded-xl font-medium;
+  }
+
+  .badge-purple {
+    @apply inline-flex items-center gap-2 bg-primary w-full justify-center py-3 rounded-xl font-medium text-primary-foreground;
+  }
+
+  .badge-amber {
+    @apply inline-flex items-center gap-2 bg-amber-500/20 text-amber-500 w-full justify-center py-3 rounded-xl font-medium;
+  }
+
+  .glow-bg {
+    background: 
+      radial-gradient(ellipse 100% 80% at 50% -30%, hsl(270 91% 50% / 0.25), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 30% 20%, hsl(280 91% 60% / 0.15), transparent 50%),
+      radial-gradient(ellipse 50% 30% at 70% 30%, hsl(260 91% 55% / 0.12), transparent 50%);
+  }
+
+  .glow-bottom {
+    background: 
+      radial-gradient(ellipse 100% 60% at 50% 130%, hsl(270 91% 50% / 0.2), transparent 70%),
+      radial-gradient(ellipse 50% 40% at 30% 110%, hsl(280 91% 60% / 0.1), transparent 50%);
+  }
+
+  .auth-glow {
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .auth-glow::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(600px, 100vw);
+    height: 400px;
+    background: radial-gradient(ellipse, hsl(270 91% 50% / 0.3), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .auth-glow::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(500px, 100vw);
+    height: 300px;
+    background: radial-gradient(ellipse, hsl(270 91% 50% / 0.15), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-[hsl(290,91%,55%)];
+  }
+
+  .text-gradient-cyan {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--lobby-cyan))] to-[hsl(200,94%,50%)];
+  }
+
+  .star-yellow {
+    color: hsl(45 93% 58%);
+    fill: hsl(45 93% 58%);
+  }
+}

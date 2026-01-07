@@ -1,0 +1,37 @@
+name: Deploy Frontend (Vite)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar Código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # Versão estável recente
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Construir o Projeto (Build)
+        run: npm run build
+        env:
+          # AQUI VC COLOCA O LINK DA SUA API PARA O FRONT SABER ONDE BATER
+          VITE_API_URL: "https://api.uselobby.com.br/api/v1"
+
+      - name: Enviar arquivos para a VPS via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "dist/*"     # Pega tudo da pasta dist gerada
+          target: "/var/www/html" # Manda pra pasta do Nginx
+          strip_components: 1  # Remove a pasta 'dist' e joga só os arquivos soltos
