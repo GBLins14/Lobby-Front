@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   getAdminAccounts,
@@ -16,6 +17,7 @@ import {
   Delivery,
   CondominiumSignUpPayload,
 } from "@/lib/api";
+import { formatPhone } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +38,7 @@ import {
   UserCog,
   Package,
   Building2,
+  Copy,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import DashboardNav from "@/components/DashboardNav";
@@ -45,6 +48,7 @@ type BanUnit = "Hours" | "Days" | "Weeks" | "Months" | "Years";
 export default function AdminDashboard() {
   const { user, token, logout } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [pendingAccounts, setPendingAccounts] = useState<Account[]>([]);
   const [bannedAccounts, setBannedAccounts] = useState<Account[]>([]);
@@ -82,7 +86,15 @@ export default function AdminDashboard() {
   });
   const [isSubmittingCondo, setIsSubmittingCondo] = useState(false);
 
+  const hasSubscription = user?.subscriptionPlan != null;
   const hasCondominium = user?.condominium != null;
+
+  // Se não tem plano, redirecionar para página de planos
+  useEffect(() => {
+    if (!isLoading && user && !hasSubscription) {
+      navigate("/plans");
+    }
+  }, [user, hasSubscription, isLoading, navigate]);
 
   useEffect(() => {
     fetchAllData();
@@ -365,6 +377,15 @@ export default function AdminDashboard() {
     }
   };
 
+  // Se não tem plano, mostrar loading enquanto redireciona
+  if (!hasSubscription) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   // Se não tem condomínio vinculado, exibir formulário de cadastro
   if (!hasCondominium) {
     return (
@@ -438,7 +459,7 @@ export default function AdminDashboard() {
                       id="businessPhone"
                       required
                       value={condoForm.businessPhone}
-                      onChange={(e) => setCondoForm({ ...condoForm, businessPhone: e.target.value })}
+                      onChange={(e) => setCondoForm({ ...condoForm, businessPhone: formatPhone(e.target.value) })}
                       placeholder="(00) 00000-0000"
                     />
                   </div>
@@ -451,6 +472,7 @@ export default function AdminDashboard() {
                       required
                       value={condoForm.blocksCount}
                       onChange={(e) => setCondoForm({ ...condoForm, blocksCount: parseInt(e.target.value) || 1 })}
+                      className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
                   <div className="space-y-2">
@@ -462,6 +484,7 @@ export default function AdminDashboard() {
                       required
                       value={condoForm.apartmentCount}
                       onChange={(e) => setCondoForm({ ...condoForm, apartmentCount: parseInt(e.target.value) || 1 })}
+                      className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
                 </div>
@@ -604,6 +627,32 @@ export default function AdminDashboard() {
 
       {/* Content */}
       <main className="container mx-auto px-4 py-8">
+        {/* Condominium Code Card */}
+        {(user?.condominium as { condominiumCode?: string })?.condominiumCode && (
+          <Card className="mb-6 bg-card/50 border-border/40">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Código do Condomínio</p>
+                  <p className="text-2xl font-bold text-primary font-mono">{(user.condominium as { condominiumCode: string }).condominiumCode}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Compartilhe este código com moradores, porteiros e síndicos para se registrarem.</p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText((user.condominium as { condominiumCode: string }).condominiumCode);
+                    toast({ title: "Copiado!", description: "Código copiado para a área de transferência." });
+                  }}
+                >
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copiar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-5 mb-8">
           <Card className="bg-card/50 border-border/40">
