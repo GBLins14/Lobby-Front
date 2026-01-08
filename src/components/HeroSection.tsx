@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 
 const HeroSection = () => {
   const stats = [
-    { icon: Package, value: "50k+", label: "Encomendas gerenciadas" },
-    { icon: Building, value: "500+", label: "Condomínios ativos" },
-    { icon: Zap, value: "99.9%", label: "Uptime garantido" },
-    { icon: Star, value: "4.9★", label: "Avaliação dos usuários" },
+    { icon: Package, value: "15k+", label: "Encomendas gerenciadas" },
+    { icon: Building, value: "100+", label: "Condomínios ativos" },
+    { icon: Zap, value: "99.9%", label: "Velocidade garantida" },
+    { icon: Star, value: "5.0★", label: "Avaliação dos usuários" },
   ];
 
   return (
