@@ -789,13 +789,13 @@ export async function adminUnbanAccount(token: string, accountId: number): Promi
 }
 
 export async function adminChangeAccountRole(token: string, accountId: number, role: string): Promise<ApiResponse> {
-  const response = await fetch(`${API_BASE_URL}/admin/accounts/role/${accountId}`, {
+  const response = await fetch(`${API_BASE_URL}/admin/accounts/role`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ role }),
+    body: JSON.stringify({ id: accountId, role }),
   });
 
   return handleApiResponse(response);
