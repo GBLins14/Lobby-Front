@@ -727,7 +727,7 @@ export async function getAdminBannedAccounts(token: string): Promise<AccountsRes
 }
 
 export async function getAdminDeliveries(token: string): Promise<DeliveriesResponse> {
-  const response = await fetch(`${API_BASE_URL}/admin/deliveries`, {
+  const response = await fetch(`${API_BASE_URL}/syndic/deliveries`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,

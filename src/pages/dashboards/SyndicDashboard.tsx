@@ -59,9 +59,6 @@ export default function SyndicDashboard() {
   const [selectedAccountForRole, setSelectedAccountForRole] = useState<Account | null>(null);
   const [newRole, setNewRole] = useState("");
 
-  // Confirm delivery dialog state
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [confirmTrackingCode, setConfirmTrackingCode] = useState("");
   const [isConfirming, setIsConfirming] = useState(false);
 
   useEffect(() => {
@@ -207,21 +204,14 @@ export default function SyndicDashboard() {
     }
   };
 
-  const handleOpenConfirmDialog = (trackingCode: string) => {
-    setConfirmTrackingCode(trackingCode);
-    setConfirmDialogOpen(true);
-  };
-
-  const handleConfirmDelivery = async () => {
-    if (!token || !confirmTrackingCode.trim()) return;
+  const handleConfirmDelivery = async (trackingCode: string) => {
+    if (!token || !trackingCode.trim()) return;
 
     setIsConfirming(true);
     try {
-      const response = await confirmDoormanDelivery(token, confirmTrackingCode.trim());
+      const response = await confirmDoormanDelivery(token, trackingCode.trim());
       if (response.success) {
         toast({ title: "Sucesso", description: "Entrega confirmada com sucesso!" });
-        setConfirmDialogOpen(false);
-        setConfirmTrackingCode("");
         fetchAllData();
       } else {
         toast({
@@ -525,36 +515,6 @@ export default function SyndicDashboard() {
           </DialogContent>
         </Dialog>
 
-        {/* Confirm Delivery Dialog */}
-        <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
-          <DialogContent className="bg-card border-border/40">
-            <DialogHeader>
-              <DialogTitle>Confirmar Entrega</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <p className="text-muted-foreground">
-                Confirme o código de rastreio para registrar a entrega.
-              </p>
-              <div className="space-y-2">
-                <Label htmlFor="trackingCode">Código de Rastreio</Label>
-                <Input
-                  id="trackingCode"
-                  value={confirmTrackingCode}
-                  onChange={(e) => setConfirmTrackingCode(e.target.value)}
-                  placeholder="Digite o código..."
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setConfirmDialogOpen(false)}>
-                Cancelar
-              </Button>
-              <Button onClick={handleConfirmDelivery} disabled={isConfirming || !confirmTrackingCode.trim()}>
-                {isConfirming ? "Confirmando..." : "Confirmar"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
 
         {/* Tabs */}
         <Tabs defaultValue="all" className="w-full">
@@ -689,7 +649,7 @@ export default function SyndicDashboard() {
                               </div>
                               {getStatusBadge(delivery.status)}
                             </div>
-                            <p className="text-sm text-muted-foreground mb-2">Código: {delivery.trackingCode}</p>
+                            <p className="text-sm text-muted-foreground mb-2">{delivery.trackingCode}</p>
                             {delivery.arrivalDate && (
                               <p className="text-sm text-muted-foreground mb-3">
                                 Recebido: {new Date(delivery.arrivalDate as string).toLocaleDateString("pt-BR")}
@@ -698,10 +658,11 @@ export default function SyndicDashboard() {
                             <Button
                               size="sm"
                               className="w-full"
-                              onClick={() => handleOpenConfirmDialog(delivery.trackingCode)}
+                              onClick={() => handleConfirmDelivery(delivery.trackingCode)}
+                              disabled={isConfirming}
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
-                              Confirmar Entrega
+                              {isConfirming ? "Confirmando..." : "Confirmar Entrega"}
                             </Button>
                           </CardContent>
                         </Card>
@@ -727,7 +688,7 @@ export default function SyndicDashboard() {
                               </div>
                               {getStatusBadge(delivery.status)}
                             </div>
-                            <p className="text-sm text-muted-foreground">Código: {delivery.trackingCode}</p>
+                            <p className="text-sm text-muted-foreground">{delivery.trackingCode}</p>
                             {delivery.arrivalDate && (
                               <p className="text-sm text-muted-foreground mt-2">
                                 Recebido: {new Date(delivery.arrivalDate as string).toLocaleDateString("pt-BR")}

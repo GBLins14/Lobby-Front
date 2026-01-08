@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -243,12 +244,16 @@ export default function Plans() {
             const Icon = plan.icon;
 
             return (
-              <Card
+              <motion.div
                 key={plan.id}
-                className={`bg-card/50 border-border/40 relative transition-all duration-300 ${
-                  plan.popular ? "ring-2 ring-primary/50 lg:scale-105" : ""
-                } ${colors.border}`}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
+                <Card
+                  className={`bg-card/50 border-border/40 relative transition-all duration-300 cursor-pointer ${
+                    plan.popular ? "ring-2 ring-primary/50 lg:scale-105" : ""
+                  } ${colors.border}`}
+                >
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <Badge className="bg-primary text-primary-foreground">
@@ -319,6 +324,7 @@ export default function Plans() {
                   </Button>
                 </CardFooter>
               </Card>
+              </motion.div>
             );
           })}
         </div>
@@ -330,41 +336,56 @@ export default function Plans() {
           </h3>
           
           <div className="space-y-4">
-            <Card className="bg-card/50 border-border/40">
-              <CardContent className="pt-6">
-                <h4 className="font-semibold text-foreground mb-2">
-                  Posso trocar de plano a qualquer momento?
-                </h4>
-                <p className="text-muted-foreground text-sm">
-                  Sim! Você pode fazer upgrade ou downgrade do seu plano a qualquer momento. 
-                  As alterações são aplicadas no próximo ciclo de faturamento.
-                </p>
-              </CardContent>
-            </Card>
+            <motion.div
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
+              <Card className="bg-card/50 border-border/40 cursor-pointer">
+                <CardContent className="pt-6">
+                  <h4 className="font-semibold text-foreground mb-2">
+                    Posso trocar de plano a qualquer momento?
+                  </h4>
+                  <p className="text-muted-foreground text-sm">
+                    Sim! Você pode fazer upgrade ou downgrade do seu plano a qualquer momento. 
+                    As alterações são aplicadas no próximo ciclo de faturamento.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="bg-card/50 border-border/40">
-              <CardContent className="pt-6">
-                <h4 className="font-semibold text-foreground mb-2">
-                  Como funciona o teste grátis?
-                </h4>
-                <p className="text-muted-foreground text-sm">
-                  O plano Teste Grátis inclui todas as funcionalidades sem limite de blocos ou apartamentos. 
-                  Entre em contato com nosso especialista para ativar.
-                </p>
-              </CardContent>
-            </Card>
+            <motion.div
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
+              <Card className="bg-card/50 border-border/40 cursor-pointer">
+                <CardContent className="pt-6">
+                  <h4 className="font-semibold text-foreground mb-2">
+                    Como funciona o teste grátis?
+                  </h4>
+                  <p className="text-muted-foreground text-sm">
+                    O plano Teste Grátis inclui todas as funcionalidades sem limite de blocos ou apartamentos. 
+                    Entre em contato com nosso especialista para ativar.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="bg-card/50 border-border/40">
-              <CardContent className="pt-6">
-                <h4 className="font-semibold text-foreground mb-2">
-                  Como funciona o suporte técnico?
-                </h4>
-                <p className="text-muted-foreground text-sm">
-                  Todos os planos incluem suporte dedicado via WhatsApp e E-mail, 
-                  disponível 24 horas por dia, 7 dias por semana.
-                </p>
-              </CardContent>
-            </Card>
+            <motion.div
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
+              <Card className="bg-card/50 border-border/40 cursor-pointer">
+                <CardContent className="pt-6">
+                  <h4 className="font-semibold text-foreground mb-2">
+                    Como funciona o suporte técnico?
+                  </h4>
+                  <p className="text-muted-foreground text-sm">
+                    Todos os planos incluem suporte dedicado via WhatsApp e E-mail, 
+                    disponível 24 horas por dia, 7 dias por semana.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
         </div>
 

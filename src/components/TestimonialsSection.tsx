@@ -1,4 +1,5 @@
 import { Star, Heart } from "lucide-react";
+import { motion } from "framer-motion";
 import ScrollReveal from "./ScrollReveal";
 
 const TestimonialsSection = () => {
@@ -47,35 +48,41 @@ const TestimonialsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
           {testimonials.map((testimonial, index) => (
             <ScrollReveal key={index} delay={index * 0.15}>
-              <div className="testimonial-card h-full flex flex-col">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.stars)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={18}
-                      className="star-yellow"
-                    />
-                  ))}
-                </div>
-                <p className="text-sm md:text-base text-muted-foreground mb-6 leading-relaxed flex-grow">
-                  {testimonial.text}
-                </p>
-                <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/10">
-                  <div
-                    className={`w-11 h-11 rounded-full ${testimonial.color} flex items-center justify-center text-sm font-bold text-primary-foreground shadow-lg`}
-                  >
-                    {testimonial.initial}
+              <motion.div
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="h-full"
+              >
+                <div className="testimonial-card h-full flex flex-col cursor-pointer">
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(testimonial.stars)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={18}
+                        className="star-yellow"
+                      />
+                    ))}
                   </div>
-                  <div>
-                    <div className="font-semibold text-foreground text-sm">
-                      {testimonial.author}
+                  <p className="text-sm md:text-base text-muted-foreground mb-6 leading-relaxed flex-grow">
+                    {testimonial.text}
+                  </p>
+                  <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/10">
+                    <div
+                      className={`w-11 h-11 rounded-full ${testimonial.color} flex items-center justify-center text-sm font-bold text-primary-foreground shadow-lg`}
+                    >
+                      {testimonial.initial}
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {testimonial.role}
+                    <div>
+                      <div className="font-semibold text-foreground text-sm">
+                        {testimonial.author}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {testimonial.role}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </ScrollReveal>
           ))}
         </div>

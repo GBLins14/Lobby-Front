@@ -72,8 +72,8 @@ export default function AdminDashboard() {
     cnpj: "",
     businessEmail: "",
     businessPhone: "",
-    blocksCount: 1,
-    apartmentCount: 1,
+    blocksCount: 0,
+    apartmentCount: 0,
     address: {
       zipCode: "",
       street: "",
@@ -89,16 +89,25 @@ export default function AdminDashboard() {
   const hasSubscription = user?.subscriptionPlan != null;
   const hasCondominium = user?.condominium != null;
 
-  // Se não tem plano, redirecionar para página de planos
+  // Verificar plano e condomínio antes de qualquer coisa
   useEffect(() => {
-    if (!isLoading && user && !hasSubscription) {
+    if (!user) return;
+    
+    // Se não tem plano, redireciona para página de planos
+    if (!hasSubscription) {
       navigate("/plans");
+      return;
     }
-  }, [user, hasSubscription, isLoading, navigate]);
-
-  useEffect(() => {
+    
+    // Se tem plano mas não tem condomínio, não chama APIs (mostra formulário)
+    if (!hasCondominium) {
+      setIsLoading(false);
+      return;
+    }
+    
+    // Tem plano e condomínio: carregar dados
     fetchAllData();
-  }, [token]);
+  }, [user, hasSubscription, hasCondominium, navigate]);
 
   const fetchAllData = async () => {
     if (!token) return;
@@ -467,24 +476,20 @@ export default function AdminDashboard() {
                     <Label htmlFor="blocksCount">Quantidade de Blocos *</Label>
                     <Input
                       id="blocksCount"
-                      type="number"
-                      min={1}
                       required
-                      value={condoForm.blocksCount}
-                      onChange={(e) => setCondoForm({ ...condoForm, blocksCount: parseInt(e.target.value) || 1 })}
-                      className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      value={condoForm.blocksCount === 0 ? "" : condoForm.blocksCount}
+                      onChange={(e) => setCondoForm({ ...condoForm, blocksCount: e.target.value === "" ? 0 : parseInt(e.target.value) || 0 })}
+                      placeholder="0"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="apartmentCount">Quantidade de Apartamentos *</Label>
                     <Input
                       id="apartmentCount"
-                      type="number"
-                      min={1}
                       required
-                      value={condoForm.apartmentCount}
-                      onChange={(e) => setCondoForm({ ...condoForm, apartmentCount: parseInt(e.target.value) || 1 })}
-                      className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      value={condoForm.apartmentCount === 0 ? "" : condoForm.apartmentCount}
+                      onChange={(e) => setCondoForm({ ...condoForm, apartmentCount: e.target.value === "" ? 0 : parseInt(e.target.value) || 0 })}
+                      placeholder="0"
                     />
                   </div>
                 </div>
@@ -968,7 +973,7 @@ export default function AdminDashboard() {
                         </div>
                         {getStatusBadge(delivery.status)}
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">Código: {delivery.trackingCode}</p>
+                      <p className="text-sm text-muted-foreground mb-2">{delivery.trackingCode}</p>
                       {delivery.arrivalDate && (
                         <p className="text-sm text-muted-foreground mb-3">
                           Chegada: {new Date(delivery.arrivalDate as string).toLocaleDateString("pt-BR")}
@@ -1012,7 +1017,7 @@ export default function AdminDashboard() {
                         </div>
                         {getStatusBadge(delivery.status)}
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">Código: {delivery.trackingCode}</p>
+                      <p className="text-sm text-muted-foreground mb-2">{delivery.trackingCode}</p>
                       {delivery.arrivalDate && (
                         <p className="text-sm text-muted-foreground">
                           Chegada: {new Date(delivery.arrivalDate as string).toLocaleDateString("pt-BR")}

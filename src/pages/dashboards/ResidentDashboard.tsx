@@ -151,7 +151,12 @@ export default function ResidentDashboard() {
           </Card>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {deliveries.map((delivery) => (
+            {[...deliveries].sort((a, b) => {
+              const aDelivered = isDelivered(a.status);
+              const bDelivered = isDelivered(b.status);
+              if (aDelivered === bDelivered) return 0;
+              return aDelivered ? 1 : -1;
+            }).map((delivery) => (
               <Card key={delivery.id} className="bg-card/50 border-border/40 hover:border-primary/50 transition-colors">
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">

@@ -478,7 +478,7 @@ export default function DoormanDashboard() {
                         </div>
                         {getStatusBadge(delivery.status)}
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">Código: {delivery.trackingCode}</p>
+                      <p className="text-sm text-muted-foreground mb-3">{delivery.trackingCode}</p>
                       {delivery.arrivalDate && (
                         <p className="text-sm text-muted-foreground mb-3">
                           Recebido: {new Date(delivery.arrivalDate as string).toLocaleDateString("pt-BR")}
@@ -487,7 +487,10 @@ export default function DoormanDashboard() {
                       <Button 
                         size="sm" 
                         className="w-full"
-                        onClick={() => handleConfirmDelivery(delivery.trackingCode)}
+                        onClick={() => {
+                          setConfirmCode(delivery.trackingCode || "");
+                          setConfirmDialogOpen(true);
+                        }}
                       >
                         <CheckCircle className="h-4 w-4 mr-2" />
                         Confirmar Entrega
@@ -521,7 +524,7 @@ export default function DoormanDashboard() {
                         </div>
                         {getStatusBadge(delivery.status)}
                       </div>
-                      <p className="text-sm text-muted-foreground">Código: {delivery.trackingCode}</p>
+                      <p className="text-sm text-muted-foreground">{delivery.trackingCode}</p>
                       {delivery.arrivalDate && (
                         <p className="text-sm text-muted-foreground mt-2">
                           Recebido: {new Date(delivery.arrivalDate as string).toLocaleDateString("pt-BR")}
